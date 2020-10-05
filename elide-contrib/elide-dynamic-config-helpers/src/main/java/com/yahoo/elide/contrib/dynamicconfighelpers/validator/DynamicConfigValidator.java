@@ -399,7 +399,7 @@ public class DynamicConfigValidator {
     }
 
     /**
-     * Check if input join definition is valid and is in format %join.columnName = %from.columnName.
+     * Check if input join definition is valid and is in format {{join}}.columnName = {{this}}.columnName.
      */
     private static void validateJoinDefinition(String joinDefinition) {
         validateSql(joinDefinition);
@@ -409,7 +409,7 @@ public class DynamicConfigValidator {
                         .distinct()
                         .count()) {
             throw new IllegalStateException("join definition provided in table config must be in format "
-                            + "'%join.columnName = %from.columnName' or '%from.columnName = %join.columnName'");
+                            + "'{{join}}.columnName = {{this}}.columnName' or '{{this}}.columnName = {{join}}.columnName'");
         }
     }
 

@@ -18,13 +18,13 @@
              name: playerCountry
              to: country
              type: toOne
-             definition: '%join.id = %from.country_id'
+             definition: '{{join}}.id = {{this}}.country_id'
           },
           {
              name: playerTeam
              to: team
              type: toMany
-             definition: ' %from.team_id = %join.id '
+             definition: ' {{this}}.team_id = {{join}}.id '
           }
       ]
 
