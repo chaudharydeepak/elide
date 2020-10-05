@@ -404,12 +404,14 @@ public class DynamicConfigValidator {
     private static void validateJoinDefinition(String joinDefinition) {
         validateSql(joinDefinition);
         if (2 != Arrays.stream(joinDefinition.split(EQUAL_TO))
-                        .map(str -> str.trim().substring(0, 6))
-                        .filter(str -> str.matches("%(from|join)\\."))
+                        .map(String::trim)
+                        .map(str -> str.substring(0, str.indexOf('.') + 1))
+                        .filter(str -> str.matches("\\{\\{(\\s*)(join|this)(\\s*)}}\\."))
                         .distinct()
                         .count()) {
             throw new IllegalStateException("join definition provided in table config must be in format "
-                            + "'{{join}}.columnName = {{this}}.columnName' or '{{this}}.columnName = {{join}}.columnName'");
+                            + "'{{join}}.columnName = {{this}}.columnName' or "
+                            + "'{{this}}.columnName = {{join}}.columnName'");
         }
     }
 
