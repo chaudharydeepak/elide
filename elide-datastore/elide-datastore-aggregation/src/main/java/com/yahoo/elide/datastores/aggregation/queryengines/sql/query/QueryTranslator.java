@@ -45,6 +45,10 @@ import java.util.stream.Stream;
  * Translates a client query into a SQL query.
  */
 public class QueryTranslator implements QueryVisitor<SQLQuery.SQLQueryBuilder> {
+
+    private static final String JOIN_SYNTAX_REGEX = "\\{\\{(\\s*)join(\\s*)}}";
+    private static final String THIS_SYNTAX_REGEX = "\\{\\{(\\s*)this(\\s*)}}";
+
     private final SQLReferenceTable referenceTable;
     private final EntityDictionary dictionary;
     private final SQLDialect dialect;
@@ -454,16 +458,16 @@ public class QueryTranslator implements QueryVisitor<SQLQuery.SQLQueryBuilder> {
     }
 
     /**
-     * Construct a join on clause based on given constraint expression, replace "%from" with from table alias
-     * and "%join" with join table alias.
+     * Construct a join on clause based on given constraint expression, replace "{{this}}" with from table alias
+     * and "{{join}}" with join table alias.
      *
      * @param joinClause sql join constraint
-     * @param fromAlias from table alias
+     * @param thisAlias from table alias
      * @param joinToAlias join to table alias
      * @return sql string that represents a full join condition
      */
-    private String extractJoinExpression(String joinClause, String fromAlias, String joinToAlias) {
-        return joinClause.replace("%from", fromAlias).replace("%join", joinToAlias);
+    private String extractJoinExpression(String joinClause, String thisAlias, String joinToAlias) {
+        return joinClause.replaceFirst(THIS_SYNTAX_REGEX, thisAlias).replaceFirst(JOIN_SYNTAX_REGEX, joinToAlias);
     }
 
     /**

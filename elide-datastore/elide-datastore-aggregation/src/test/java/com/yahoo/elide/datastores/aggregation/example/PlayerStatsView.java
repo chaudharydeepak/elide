@@ -39,6 +39,6 @@ public class PlayerStatsView {
      */
     private String countryName;
 
-    @Join("%from.player_id = %join.id")
+    @Join("{{this}}.player_id = {{join}}.id")
     private Player player;
 }

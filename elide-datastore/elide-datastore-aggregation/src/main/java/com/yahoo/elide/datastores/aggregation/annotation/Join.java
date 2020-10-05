@@ -17,9 +17,9 @@ import java.lang.annotation.Target;
 public @interface Join {
     /**
      * Join on clause constraint for customizing relationship joins as a plain sql string. Provided in the model.
-     * Use "%from" and "%join% to represent the two sides of join.
+     * Use "{{this}}" and "{{join}}" to represent the two sides of join.
      *
-     * @return join constraint like <code>%from.col1 = %join.col2</code>
+     * @return join constraint like <code>{{this}}.col1 = {{join}}.col2</code>
      */
     String value();
 }

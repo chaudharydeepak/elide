@@ -69,7 +69,7 @@ public class VideoGame {
         return timeSpentPerGame;
     }
 
-    @Join("%from.player_id = %join.id")
+    @Join("{{this}}.player_id = {{join}}.id")
     public Player getPlayer() {
         return player;
     }

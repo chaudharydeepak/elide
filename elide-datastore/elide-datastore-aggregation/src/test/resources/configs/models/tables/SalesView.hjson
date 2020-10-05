@@ -13,7 +13,7 @@
           name: customerDetails
           to: CustomerDetails
           type: toOne
-          definition: %join.id = %from.customerId
+          definition: '{{ this }}.customerId = {{join  }}.id'
         }
       ]
       measures:

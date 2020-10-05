@@ -38,7 +38,7 @@ public class SqlReferenceVisitorTest {
         @Id
         private long id;
 
-        @Join("%from.dimension1 = %join.dimension1")
+        @Join("{{this}}.dimension1 = {{join}}.dimension1")
         private JoinModel joinModel;
 
         //Logical name matches physical name
