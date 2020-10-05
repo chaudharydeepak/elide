@@ -147,6 +147,14 @@ public class DynamicConfigValidatorTest {
     }
 
     @Test
+    public void testBadJoinDefinition() {
+        Exception e = assertThrows(IllegalStateException.class, () -> DynamicConfigValidator
+                        .main(new String[] {"--configDir", "src/test/resources/validator/bad_join_def"}));
+        assertEquals(e.getMessage(), "join definition provided in table config must be in format "
+                        + "'%join.columnName = %from.columnName' or '%from.columnName = %join.columnName'");
+    }
+
+    @Test
     public void testUndefinedVariable() {
         Exception e = assertThrows(IllegalStateException.class, () -> DynamicConfigValidator
                 .main(new String[] { "--configDir", "src/test/resources/validator/undefined_handlebar" }));

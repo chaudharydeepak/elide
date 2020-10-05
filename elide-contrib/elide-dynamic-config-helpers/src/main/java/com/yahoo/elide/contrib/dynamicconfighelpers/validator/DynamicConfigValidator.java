@@ -59,6 +59,7 @@ public class DynamicConfigValidator {
     private static final String[] ROLE_NAME_DISALLOWED_WORDS = new String[] { "," };
     private static final String SQL_SPLIT_REGEX = "\\s+";
     private static final String SEMI_COLON = ";";
+    private static final String EQUAL_TO = "=";
     private static final Pattern HANDLEBAR_REGEX = Pattern.compile("<%(.*?)%>");
     private static final String RESOURCES = "resources";
     private static final int RESOURCES_LENGTH = 9; //"resources".length()
@@ -121,7 +122,7 @@ public class DynamicConfigValidator {
         validateRequiredConfigsProvided();
         validateNameUniqueness(this.elideSQLDBConfig.getDbconfigs());
         validateNameUniqueness(this.elideTableConfig.getTables());
-        validateSqlInTableConfig(this.elideTableConfig);
+        validateTableConfig(this.elideTableConfig);
         validateJoinedTablesDBConnectionName(this.elideTableConfig);
     }
 
@@ -326,14 +327,14 @@ public class DynamicConfigValidator {
      * @param elideTableConfig ElideTableConfig
      * @return boolean true if all sql/definition passes validation
      */
-    private static boolean validateSqlInTableConfig(ElideTableConfig elideTableConfig) {
+    private static boolean validateTableConfig(ElideTableConfig elideTableConfig) {
         for (Table table : elideTableConfig.getTables()) {
             validateSql(table.getSql());
             for (Dimension dim : table.getDimensions()) {
                 validateSql(dim.getDefinition());
             }
             for (Join join : table.getJoins()) {
-                validateSql(join.getDefinition());
+                validateJoinDefinition(join.getDefinition());
             }
             for (Measure measure : table.getMeasures()) {
                 validateSql(measure.getDefinition());
@@ -394,6 +395,21 @@ public class DynamicConfigValidator {
                 || containsDisallowedWords(sqlDefinition, SQL_SPLIT_REGEX, SQL_DISALLOWED_WORDS))) {
             throw new IllegalStateException("sql/definition provided in table config contain either '" + SEMI_COLON
                     + "' or one of these words: " + Arrays.toString(SQL_DISALLOWED_WORDS.toArray()));
+        }
+    }
+
+    /**
+     * Check if input join definition is valid and is in format %join.columnName = %from.columnName.
+     */
+    private static void validateJoinDefinition(String joinDefinition) {
+        validateSql(joinDefinition);
+        if (2 != Arrays.stream(joinDefinition.split(EQUAL_TO))
+                        .map(str -> str.trim().substring(0, 6))
+                        .filter(str -> str.matches("%(from|join)\\."))
+                        .distinct()
+                        .count()) {
+            throw new IllegalStateException("join definition provided in table config must be in format "
+                            + "'%join.columnName = %from.columnName' or '%from.columnName = %join.columnName'");
         }
     }
 

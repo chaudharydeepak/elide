@@ -15,13 +15,13 @@
              name: playerCountry
              to: country
              type: toAll
-             definition: '${to}.id = ${from}.country_id'
+             definition: '%join.id = %from.country_id'
           },
           {
              name: playerTeam
              to: team
              type: toMany
-             definition: '${to}.id = ${from}.team_id'
+             definition: '%join.id = %from.team_id'
           }
       ]
 
