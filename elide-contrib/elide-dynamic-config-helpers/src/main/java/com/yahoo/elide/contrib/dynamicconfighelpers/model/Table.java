@@ -73,7 +73,7 @@ public class Table implements Named {
     private String filterTemplate;
 
     @JsonProperty("cardinality")
-    private Table.Cardinality cardinality = Table.Cardinality.fromValue("tiny");
+    private Table.Cardinality cardinality = Table.Cardinality.fromValue("small");
 
     @JsonProperty("readAccess")
     private String readAccess = "Prefab.Role.All";
@@ -111,11 +111,9 @@ public class Table implements Named {
 
     public enum Cardinality {
 
-        TINY("tiny"),
         SMALL("small"),
         MEDIUM("medium"),
-        LARGE("large"),
-        HUGE("huge");
+        LARGE("large");
         private final String value;
         private final static Map<String, Table.Cardinality> CONSTANTS = new HashMap<String, Table.Cardinality>();
 
